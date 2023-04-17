@@ -1,28 +1,28 @@
 jobs:
   authenticate-docker-with-aws:
     steps:
-      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin {{aws_uri}}
+      - aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin {aws_uri}
 
   docker-build-amd64: 
     steps:
-      - docker buildx build --platform linux/amd64 -t 3.11-amd64 .
+      - docker buildx build --platform linux/amd64 -t {python_version}-amd64 .
 
   docker-build-arm64: 
     steps:
-      - docker buildx build --platform linux/arm64 -t 3.11-arm64 .
+      - docker buildx build --platform linux/arm64 -t {python_version}-arm64 .
 
 
   docker-tag-amd64:
     requires:
       - docker-build-amd64
     steps:
-      - docker tag 3.11-amd64 {{aws_uri}}/{{aws_image_tag}}:{{python_version}}-amd64
+      - docker tag {python_version}-amd64 {aws_uri}/{aws_image_tag}:{python_version}-amd64
 
   docker-tag-arm64:
     requires:
       - docker-build-arm64
     steps:
-      - docker tag 3.11-arm64 {{aws_uri}}/{{aws_image_tag}}:{{python_version}}-arm64
+      - docker tag {python_version}-arm64 {aws_uri}/{aws_image_tag}:{python_version}-arm64
 
 
   docker-push:
@@ -31,8 +31,8 @@ jobs:
       - docker-tag-arm64
       - docker-tag-amd64
     steps:
-      - docker push {{aws_uri}}/{{aws_image_tag}}:{{python_version}}-amd64
-      - docker push {{aws_uri}}/{{aws_image_tag}}:{{python_version}}-arm64
+      - docker push {aws_uri}/{aws_image_tag}:{python_version}-amd64
+      - docker push {aws_uri}/{aws_image_tag}:{python_version}-arm64
 
 
 variables:

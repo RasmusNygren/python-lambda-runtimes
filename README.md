@@ -1,5 +1,8 @@
-# python-lambda-runtimes
+# Python lambda runtimes
 Up-to-date Python runtimes for AWS Lambda
+
+# Supported versions
+- 3.11
 
 # Usage
 The runtimes are available at 
